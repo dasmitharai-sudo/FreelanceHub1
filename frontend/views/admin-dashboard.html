@@ -1,0 +1,383 @@
+<div class="fh-dashboard-wrapper">
+  <!-- Admin Sidebar -->
+  <aside class="fh-sidebar d-none d-md-flex">
+    <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+      <div class="stat-icon bg-danger-subtle text-danger" style="width: 42px; height: 42px; font-size: 1.2rem;">
+        <i class="bi bi-shield-lock-fill"></i>
+      </div>
+      <div>
+        <strong class="d-block text-dark">Super Admin</strong>
+        <span class="badge bg-danger">Administrator</span>
+      </div>
+    </div>
+
+    <nav class="d-flex flex-column gap-1">
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'stats'}" ng-click="setTab('stats')">
+        <i class="bi bi-speedometer2"></i> Dashboard Stats
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'users'}" ng-click="setTab('users')">
+        <i class="bi bi-people"></i> Manage Users
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'categories'}" ng-click="setTab('categories')">
+        <i class="bi bi-tags"></i> Categories CRUD
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'withdrawals'}" ng-click="setTab('withdrawals')">
+        <i class="bi bi-bank"></i> Withdrawals <span class="badge bg-warning text-dark ms-auto" ng-if="stats.pendingWithdrawalsCount">{{stats.pendingWithdrawalsCount}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'disputes'}" ng-click="setTab('disputes')">
+        <i class="bi bi-shield-exclamation"></i> Disputes <span class="badge bg-danger ms-auto" ng-if="stats.openDisputesCount">{{stats.openDisputesCount}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'transactions'}" ng-click="setTab('transactions')">
+        <i class="bi bi-receipt"></i> Transactions
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'settings'}" ng-click="setTab('settings')">
+        <i class="bi bi-sliders"></i> Commission Setting
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="fh-main-content">
+    <!-- Mobile Tabs Navigation (Visible on phones & small tablets) -->
+    <div class="d-md-none mb-4 pb-2 border-bottom">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="stat-icon bg-danger-subtle text-danger" style="width: 32px; height: 32px; font-size: 1rem;">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <div class="text-truncate">
+          <strong class="d-block text-navy text-truncate small">{{currentUser.name}}</strong>
+          <span class="badge bg-danger" style="font-size: 10px;">Super Admin</span>
+        </div>
+        <a href="#!/profile-settings" class="btn btn-sm btn-outline-navy ms-auto py-1 px-2" title="Profile Settings">
+          <i class="bi bi-gear me-1"></i> Settings
+        </a>
+      </div>
+      <div class="d-flex gap-2 overflow-x-auto pb-2 flex-nowrap" style="scrollbar-width: thin;">
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'stats', 'btn-outline-navy': activeTab !== 'stats'}" ng-click="setTab('stats')">
+          <i class="bi bi-speedometer2 me-1"></i> Stats
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'users', 'btn-outline-navy': activeTab !== 'users'}" ng-click="setTab('users')">
+          <i class="bi bi-people me-1"></i> Users
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'categories', 'btn-outline-navy': activeTab !== 'categories'}" ng-click="setTab('categories')">
+          <i class="bi bi-tags me-1"></i> Categories
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'withdrawals', 'btn-outline-navy': activeTab !== 'withdrawals'}" ng-click="setTab('withdrawals')">
+          <i class="bi bi-bank me-1"></i> Withdrawals
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'disputes', 'btn-outline-navy': activeTab !== 'disputes'}" ng-click="setTab('disputes')">
+          <i class="bi bi-shield-exclamation me-1"></i> Disputes
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'transactions', 'btn-outline-navy': activeTab !== 'transactions'}" ng-click="setTab('transactions')">
+          <i class="bi bi-receipt me-1"></i> Transactions
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'settings', 'btn-outline-navy': activeTab !== 'settings'}" ng-click="setTab('settings')">
+          <i class="bi bi-sliders me-1"></i> Commission
+        </button>
+      </div>
+    </div>
+    <!-- Tab 1: Stats Overview -->
+    <div ng-if="activeTab === 'stats'">
+      <div class="mb-4">
+        <h3 class="fw-bold mb-1">FreelanceHub System Overview</h3>
+        <p class="text-muted small mb-0">Platform health, user volume, and financial transaction metrics.</p>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">TOTAL USERS</small>
+              <h3 class="fw-bold mb-0 text-dark">{{stats.totalUsers}}</h3>
+              <small class="text-muted">{{stats.totalFreelancers}} Freelancers • {{stats.totalClients}} Clients</small>
+            </div>
+            <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-people-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">ORDERS PLACED</small>
+              <h3 class="fw-bold mb-0 text-info">{{stats.totalOrders}}</h3>
+              <small class="text-success">{{stats.completedOrders}} Completed</small>
+            </div>
+            <div class="stat-icon bg-info-subtle text-info"><i class="bi bi-bag-check-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">POSTED PROJECTS</small>
+              <h3 class="fw-bold mb-0 text-secondary">{{stats.totalProjects}}</h3>
+              <small class="text-success">{{stats.completedProjects}} Completed</small>
+            </div>
+            <div class="stat-icon bg-light text-secondary"><i class="bi bi-briefcase-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">PLATFORM COMMISSION</small>
+              <h3 class="fw-bold mb-0 text-success">{{formatCurrency(stats.totalCommission)}}</h3>
+              <small class="text-muted">{{stats.commissionPercent}}% Rate</small>
+            </div>
+            <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-cash-coin"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards -->
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="fh-card p-4 h-100">
+            <h5 class="fw-bold mb-2">Pending Withdrawal Requests</h5>
+            <p class="text-muted small mb-3">Freelancers waiting for approved payouts to their UPI/bank accounts.</p>
+            <button class="btn btn-primary-fh btn-sm" ng-click="setTab('withdrawals')">
+              Review {{withdrawals.length}} Withdrawal Requests
+            </button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="fh-card p-4 h-100">
+            <h5 class="fw-bold mb-2">Open Disputes & Complaints</h5>
+            <p class="text-muted small mb-3">Client or freelancer reported issues requiring admin arbitration.</p>
+            <button class="btn btn-outline-danger btn-sm" ng-click="setTab('disputes')">
+              Review {{disputes.length}} Disputes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: User Management -->
+    <div ng-if="activeTab === 'users'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">User Accounts Management ({{users.length}})</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Verified Badge</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="u in users">
+                <td class="fw-bold">
+                  <div class="d-flex align-items-center gap-2">
+                    <img ng-src="{{u.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="">
+                    <span>{{u.name}}</span>
+                  </div>
+                </td>
+                <td>{{u.email}}</td>
+                <td><span class="badge bg-secondary text-uppercase">{{u.role}}</span></td>
+                <td>{{u.location || 'India'}}</td>
+                <td>
+                  <span class="badge" ng-class="{'bg-success': u.status === 'active', 'bg-danger': u.status === 'suspended'}">
+                    {{u.status}}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm" ng-if="u.role === 'freelancer'" ng-class="{'btn-info text-white': u.isVerified, 'btn-light border': !u.isVerified}" ng-click="toggleVerifyFreelancer(u)" title="Toggle Verified Badge">
+                    <i class="bi bi-patch-check-fill me-1"></i> {{u.isVerified ? 'Verified' : 'Unverified'}}
+                  </button>
+                  <span class="text-muted small" ng-if="u.role !== 'freelancer'">N/A</span>
+                </td>
+                <td>
+                  <button class="btn btn-sm" ng-class="{'btn-outline-danger': u.status === 'active', 'btn-outline-success': u.status === 'suspended'}" ng-click="toggleUserStatus(u)">
+                    {{u.status === 'active' ? 'Suspend' : 'Activate'}}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Category CRUD -->
+    <div ng-if="activeTab === 'categories'">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="fh-card p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Add New Category</h5>
+            <form ng-submit="addCategory()">
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Category Name *</label>
+                <input type="text" class="form-control form-control-sm" ng-model="newCategory.name" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Bootstrap Icon Class</label>
+                <input type="text" class="form-control form-control-sm" ng-model="newCategory.icon" placeholder="bi-briefcase">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Short Description</label>
+                <textarea class="form-control form-control-sm" rows="3" ng-model="newCategory.description"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary-fh btn-sm w-100">Add Category</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="fh-card p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Platform Categories ({{categories.length}})</h5>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Services</th>
+                    <th>Freelancers</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="cat in categories">
+                    <td><i class="bi {{cat.icon}} fs-5 text-primary"></i></td>
+                    <td class="fw-semibold">{{cat.name}}</td>
+                    <td>{{cat.serviceCount || 0}}</td>
+                    <td>{{cat.freelancerCount || 0}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-danger py-0 px-2" ng-click="deleteCategory(cat._id, cat.name)"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Withdrawals -->
+    <div ng-if="activeTab === 'withdrawals'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Freelancer Withdrawal Requests ({{withdrawals.length}})</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Freelancer</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Account Details</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="w in withdrawals">
+                <td>
+                  <strong class="d-block">{{w.freelancer.name}}</strong>
+                  <small class="text-muted">{{w.freelancer.email}}</small>
+                </td>
+                <td class="fw-bold text-success fs-6">{{formatCurrency(w.amount)}}</td>
+                <td><span class="badge bg-light text-dark border">{{w.method}}</span></td>
+                <td class="small">
+                  <span ng-if="w.method === 'UPI'">UPI: {{w.accountDetails.upiId || 'N/A'}}</span>
+                  <span ng-if="w.method !== 'UPI'">Bank: {{w.accountDetails.bankName}} • A/C: {{w.accountDetails.accountNumber}}</span>
+                </td>
+                <td class="small">{{w.requestedAt | date:'mediumDate'}}</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': w.status === 'approved',
+                    'bg-danger': w.status === 'rejected',
+                    'bg-warning text-dark': w.status === 'pending'
+                  }">{{w.status}}</span>
+                </td>
+                <td>
+                  <div class="d-flex gap-1" ng-if="w.status === 'pending'">
+                    <button class="btn btn-sm btn-success py-1" ng-click="processWithdrawal(w._id, 'approved', 'Payout processed successfully.')">Approve</button>
+                    <button class="btn btn-sm btn-outline-danger py-1" ng-click="processWithdrawal(w._id, 'rejected', 'Payment details invalid.')">Reject</button>
+                  </div>
+                  <span class="small text-muted" ng-if="w.status !== 'pending'">Processed</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Disputes -->
+    <div ng-if="activeTab === 'disputes'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Complaints & Disputes Resolution ({{disputes.length}})</h5>
+        <div class="text-center py-4 text-muted small" ng-if="disputes.length === 0">
+          No disputes currently raised.
+        </div>
+        <div class="d-flex flex-column gap-3" ng-if="disputes.length > 0">
+          <div class="p-3 bg-light rounded-3 border" ng-repeat="d in disputes">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <span class="badge bg-danger mb-1">{{d.reason}}</span>
+                <strong class="d-block text-dark">Raised by: {{d.raisedBy.name}} ({{d.raisedBy.role}}) vs {{d.againstUser.name}}</strong>
+              </div>
+              <span class="badge" ng-class="{'bg-warning text-dark': d.status === 'open', 'bg-success': d.status === 'resolved'}">{{d.status}}</span>
+            </div>
+            <p class="text-secondary small mb-3">{{d.description}}</p>
+            <div class="d-flex gap-2" ng-if="d.status !== 'resolved'">
+              <button class="btn btn-sm btn-success" ng-click="resolveDispute(d._id, 'resolved', 'Admin arbitrated: Mutual resolution agreed.')">Mark Resolved</button>
+              <button class="btn btn-sm btn-outline-secondary" ng-click="resolveDispute(d._id, 'rejected', 'Claim rejected due to lack of evidence.')">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 6: Transactions -->
+    <div ng-if="activeTab === 'transactions'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Platform Financial Transactions ({{transactions.length}})</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="t in transactions">
+                <td>{{t.user ? t.user.name : 'Platform System'}}</td>
+                <td><span class="badge bg-light text-dark border">{{t.type}}</span></td>
+                <td class="small">{{t.description}}</td>
+                <td class="fw-bold text-success">{{formatCurrency(t.amount)}}</td>
+                <td class="small text-muted">{{t.createdAt | date:'mediumDate'}}</td>
+                <td><span class="badge bg-success">{{t.status}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 7: Settings -->
+    <div ng-if="activeTab === 'settings'">
+      <div class="fh-card p-4" style="max-width: 550px;">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Global Platform Settings</h5>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Platform Commission Percentage (%)</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="commissionPercent" min="0" max="50">
+            <span class="input-group-text">%</span>
+          </div>
+          <small class="text-muted d-block mt-1">Deducted from completed service orders and project payments upon release.</small>
+        </div>
+        <button class="btn btn-primary-fh px-4" ng-click="updateCommission()">Update Commission Rate</button>
+      </div>
+    </div>
+  </main>
+</div>

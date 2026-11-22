@@ -1,0 +1,40 @@
+{
+  "name": "freelancehub",
+  "version": "1.0.0",
+  "description": "FreelanceHub - One Platform, Multiple Skills, Unlimited Opportunities",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "seed": "node backend/config/seed.js",
+    "dev": "node backend/server.js"
+  },
+  "keywords": [
+    "freelancing",
+    "marketplace",
+    "angularjs",
+    "nodejs",
+    "express",
+    "mongodb",
+    "bootstrap5",
+    "razorpay"
+  ],
+  "author": "FreelanceHub Team",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.8.3",
+    "angular-route": "^1.8.3",
+    "bcryptjs": "^3.0.3",
+    "bootstrap": "^5.3.9",
+    "bootstrap-icons": "^1.13.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jquery": "^4.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb-memory-server": "^11.3.0",
+    "mongoose": "^9.2.4",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.2",
+    "razorpay": "^2.9.6"
+  }
+}

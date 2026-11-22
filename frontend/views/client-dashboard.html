@@ -1,0 +1,314 @@
+<div class="fh-dashboard-wrapper">
+  <!-- Client Sidebar -->
+  <aside class="fh-sidebar d-none d-md-flex">
+    <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+      <img ng-src="{{currentUser.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="">
+      <div class="text-truncate">
+        <strong class="d-block text-dark text-truncate">{{currentUser.name}}</strong>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Client</span>
+      </div>
+    </div>
+
+    <nav class="d-flex flex-column gap-1">
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'overview'}" ng-click="setTab('overview')">
+        <i class="bi bi-grid-1x2"></i> Overview
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'orders'}" ng-click="setTab('orders')">
+        <i class="bi bi-bag-check"></i> My Orders <span class="badge bg-secondary ms-auto" ng-if="orders.length">{{orders.length}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'projects'}" ng-click="setTab('projects')">
+        <i class="bi bi-briefcase"></i> My Projects <span class="badge bg-secondary ms-auto" ng-if="projects.length">{{projects.length}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'saved'}" ng-click="setTab('saved')">
+        <i class="bi bi-bookmark-heart"></i> Saved Freelancers
+      </a>
+      <a href="#!/messages" class="fh-sidebar-item">
+        <i class="bi bi-chat-dots"></i> Messages
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'profile'}" ng-click="setTab('profile')">
+        <i class="bi bi-gear"></i> Profile & Settings
+      </a>
+      <a href="#!/post-project" class="btn btn-primary-fh btn-sm mt-3 text-center">
+        <i class="bi bi-plus-lg me-1"></i> Post a Project
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="fh-main-content">
+    <!-- Mobile Tabs Navigation (Visible on phones & small tablets) -->
+    <div class="d-md-none mb-4 pb-2 border-bottom">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <img ng-src="{{currentUser.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="Avatar">
+        <div class="text-truncate">
+          <strong class="d-block text-navy text-truncate small">{{currentUser.name}}</strong>
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 10px;">Client</span>
+        </div>
+        <a href="#!/profile-settings" class="btn btn-sm btn-outline-navy ms-auto py-1 px-2" title="Profile Settings">
+          <i class="bi bi-gear me-1"></i> Settings
+        </a>
+      </div>
+      <div class="d-flex gap-2 overflow-x-auto pb-2 flex-nowrap" style="scrollbar-width: thin;">
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'overview', 'btn-outline-navy': activeTab !== 'overview'}" ng-click="setTab('overview')">
+          <i class="bi bi-grid-1x2 me-1"></i> Overview
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'orders', 'btn-outline-navy': activeTab !== 'orders'}" ng-click="setTab('orders')">
+          <i class="bi bi-bag-check me-1"></i> Orders ({{orders.length}})
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'projects', 'btn-outline-navy': activeTab !== 'projects'}" ng-click="setTab('projects')">
+          <i class="bi bi-briefcase me-1"></i> Projects ({{projects.length}})
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'saved', 'btn-outline-navy': activeTab !== 'saved'}" ng-click="setTab('saved')">
+          <i class="bi bi-bookmark-heart me-1"></i> Saved
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'profile', 'btn-outline-navy': activeTab !== 'profile'}" ng-click="setTab('profile')">
+          <i class="bi bi-person-gear me-1"></i> Profile
+        </button>
+      </div>
+    </div>
+    <!-- Tab 1: Overview -->
+    <div ng-if="activeTab === 'overview'">
+      <!-- Welcome Section -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+          <h3 class="fw-bold mb-1">Welcome back, {{currentUser.name}}! 👋</h3>
+          <p class="text-muted small mb-0">Manage your active hires, view order deliverables, and track project milestones.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="#!/services" class="btn btn-outline-fh btn-sm"><i class="bi bi-search me-1"></i> Browse Services</a>
+          <a href="#!/post-project" class="btn btn-primary-fh btn-sm"><i class="bi bi-plus-circle me-1"></i> Post Project</a>
+        </div>
+      </div>
+
+      <!-- Quick Stats Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-4">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">TOTAL ORDERS</small>
+              <h3 class="fw-bold mb-0 text-dark">{{orders.length}}</h3>
+            </div>
+            <div class="stat-icon bg-primary-subtle text-primary">
+              <i class="bi bi-bag-check-fill"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">POSTED PROJECTS</small>
+              <h3 class="fw-bold mb-0 text-dark">{{projects.length}}</h3>
+            </div>
+            <div class="stat-icon bg-info-subtle text-info">
+              <i class="bi bi-briefcase-fill"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-4">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">SAVED FREELANCERS</small>
+              <h3 class="fw-bold mb-0 text-dark">{{savedFreelancers.length}}</h3>
+            </div>
+            <div class="stat-icon bg-warning-subtle text-warning">
+              <i class="bi bi-bookmark-heart-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Summary -->
+      <div class="fh-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0">Recent Orders</h5>
+          <button class="btn btn-link btn-sm text-decoration-none" ng-click="setTab('orders')">View All</button>
+        </div>
+
+        <div class="text-center py-4 text-muted small" ng-if="orders.length === 0">
+          No orders placed yet. <a href="#!/services">Browse marketplace services</a> to purchase directly!
+        </div>
+
+        <div class="table-responsive" ng-if="orders.length > 0">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Order #</th>
+                <th>Service Title</th>
+                <th>Freelancer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ord in orders | limitTo: 4">
+                <td class="fw-bold">#{{ord.orderNumber}}</td>
+                <td><span class="text-truncate d-inline-block" style="max-width: 200px;">{{ord.service.title}}</span></td>
+                <td>{{ord.freelancer.name}}</td>
+                <td class="fw-bold text-primary">{{formatCurrency(ord.amount)}}</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': ord.status === 'Completed',
+                    'bg-warning text-dark': ord.status === 'In Progress' || ord.status === 'Submitted'
+                  }">{{ord.status}}</span>
+                </td>
+                <td>
+                  <a href="#!/orders/{{ord._id}}" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Orders -->
+    <div ng-if="activeTab === 'orders'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">My Service Orders ({{orders.length}})</h5>
+        <div class="table-responsive" ng-if="orders.length > 0">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Order Number</th>
+                <th>Service</th>
+                <th>Package</th>
+                <th>Freelancer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ord in orders">
+                <td class="fw-bold">#{{ord.orderNumber}}</td>
+                <td>{{ord.service.title}}</td>
+                <td><span class="badge bg-secondary text-uppercase">{{ord.packageType}}</span></td>
+                <td>{{ord.freelancer.name}}</td>
+                <td class="fw-bold text-primary">{{formatCurrency(ord.amount)}}</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': ord.status === 'Completed',
+                    'bg-warning text-dark': ord.status === 'In Progress' || ord.status === 'Submitted'
+                  }">{{ord.status}}</span>
+                </td>
+                <td>
+                  <a href="#!/orders/{{ord._id}}" class="btn btn-sm btn-primary-fh">Open Order</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Projects -->
+    <div ng-if="activeTab === 'projects'">
+      <div class="fh-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <h5 class="fw-bold mb-0">My Posted Projects ({{projects.length}})</h5>
+          <a href="#!/post-project" class="btn btn-primary-fh btn-sm"><i class="bi bi-plus-lg me-1"></i> Post New</a>
+        </div>
+        <div class="table-responsive" ng-if="projects.length > 0">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Project Title</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Hired Talent</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="p in projects">
+                <td class="fw-bold">{{p.title}}</td>
+                <td><span class="badge bg-light text-dark border">{{p.category}}</span></td>
+                <td class="fw-bold text-primary">{{formatCurrency(p.budget)}}</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': p.status === 'Completed',
+                    'bg-warning text-dark': p.status === 'In Progress',
+                    'bg-info text-dark': p.status === 'Pending'
+                  }">{{p.status}}</span>
+                </td>
+                <td>{{p.hiredFreelancer ? p.hiredFreelancer.name : 'None yet'}}</td>
+                <td>
+                  <a href="#!/workspace/{{p._id}}" class="btn btn-sm btn-outline-primary" ng-if="p.status !== 'Pending'">Workspace</a>
+                  <a href="#!/projects/{{p._id}}" class="btn btn-sm btn-outline-secondary" ng-if="p.status === 'Pending'">Review Proposals</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Saved Freelancers -->
+    <div ng-if="activeTab === 'saved'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Saved Freelancers ({{savedFreelancers.length}})</h5>
+        <div class="text-center py-4 text-muted small" ng-if="savedFreelancers.length === 0">
+          No saved freelancers. You can bookmark freelancers from the <a href="#!/freelancers">Freelancers directory</a>.
+        </div>
+        <div class="row g-3" ng-if="savedFreelancers.length > 0">
+          <div class="col-md-6 col-lg-4" ng-repeat="sf in savedFreelancers">
+            <div class="border rounded-3 p-3 bg-light d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <img ng-src="{{sf.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="">
+                <div>
+                  <strong class="d-block text-dark">{{sf.name}}</strong>
+                  <small class="text-muted">{{sf.location || 'India'}}</small>
+                </div>
+              </div>
+              <div class="d-flex gap-1">
+                <a href="#!/freelancers/{{sf._id}}" class="btn btn-sm btn-primary-fh py-1 px-2" title="View"><i class="bi bi-eye"></i></a>
+                <button class="btn btn-sm btn-outline-danger py-1 px-2" ng-click="removeSaved(sf._id)" title="Remove"><i class="bi bi-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Profile & Settings -->
+    <div ng-if="activeTab === 'profile'">
+      <div class="fh-card p-4" style="max-width: 650px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <h5 class="fw-bold text-navy mb-0">Client Profile Details</h5>
+          <a href="#!/profile-settings" class="btn btn-sm btn-outline-navy">
+            <i class="bi bi-gear-wide-connected me-1"></i> Full Profile &amp; Password Settings
+          </a>
+        </div>
+        <form ng-submit="updateProfile()">
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Full Name *</label>
+            <input type="text" class="form-control" ng-model="profileForm.name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Phone Number</label>
+            <input type="text" class="form-control" ng-model="profileForm.phone">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Location / City</label>
+            <input type="text" class="form-control" ng-model="profileForm.location">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Company Name</label>
+            <input type="text" class="form-control" ng-model="profileForm.companyName">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Website</label>
+            <input type="url" class="form-control" ng-model="profileForm.website">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Update Avatar</label>
+            <input type="file" id="clientAvatarUpload" class="form-control" accept="image/*">
+          </div>
+          <button type="submit" class="btn btn-primary-fh px-4">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>

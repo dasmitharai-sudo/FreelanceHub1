@@ -1,0 +1,101 @@
+<div class="container py-4">
+  <div class="text-center mb-5" style="max-width: 680px; margin: 0 auto;">
+    <div class="badge bg-indigo-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold mb-2">
+      <i class="bi bi-calculator text-primary me-1"></i> Unique Feature
+    </div>
+    <h2 class="fw-bold mb-2">Smart Budget & Timeline Estimator</h2>
+    <p class="text-muted small">Not sure how much your project should cost? Use our intelligent estimator to get realistic pricing benchmarks and timeline projections.</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Estimator Controls -->
+    <div class="col-lg-5">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Configure Project Scope</h5>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Service Category *</label>
+          <select class="form-select" ng-model="estimator.category" ng-change="calculateEstimate()">
+            <option ng-repeat="cat in categories" value="{{cat.name}}">{{cat.name}}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Project Complexity *</label>
+          <div class="btn-group w-100" role="group">
+            <button type="button" class="btn btn-sm" ng-class="{'btn-primary': estimator.complexity === 'simple', 'btn-light border': estimator.complexity !== 'simple'}" ng-click="estimator.complexity = 'simple'; calculateEstimate()">Simple</button>
+            <button type="button" class="btn btn-sm" ng-class="{'btn-primary': estimator.complexity === 'medium', 'btn-light border': estimator.complexity !== 'medium'}" ng-click="estimator.complexity = 'medium'; calculateEstimate()">Medium</button>
+            <button type="button" class="btn btn-sm" ng-class="{'btn-primary': estimator.complexity === 'complex', 'btn-light border': estimator.complexity !== 'complex'}" ng-click="estimator.complexity = 'complex'; calculateEstimate()">Complex</button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold text-muted">Target Delivery Days: <strong class="text-dark">{{estimator.durationDays}} Days</strong></label>
+          <input type="range" class="form-range" min="1" max="30" ng-model="estimator.durationDays" ng-change="calculateEstimate()">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label small fw-semibold text-muted">Required Freelancer Experience</label>
+          <select class="form-select" ng-model="estimator.experienceRequired" ng-change="calculateEstimate()">
+            <option value="entry">Entry Level (1-2 Years)</option>
+            <option value="intermediate">Intermediate (3-5 Years)</option>
+            <option value="expert">Senior / Expert (5+ Years)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary-fh w-100 py-2" ng-click="postProjectWithEstimate()">
+          <i class="bi bi-plus-circle me-1"></i> Post Project With This Estimate
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column: Calculated Results -->
+    <div class="col-lg-7">
+      <div class="fh-card p-4 p-sm-5 mb-4" style="background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);">
+        <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-graph-up-arrow text-primary me-2"></i> Estimation Breakdown</h5>
+
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border">
+              <small class="text-muted d-block">ESTIMATED TOTAL BUDGET</small>
+              <h2 class="fw-bold text-primary mb-0">{{formatCurrency(estimateResult.estimatedTotal)}}</h2>
+              <small class="text-muted">Typical Range: {{formatCurrency(estimateResult.range.min)}} - {{formatCurrency(estimateResult.range.max)}}</small>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border">
+              <small class="text-muted d-block">BENCHMARK HOURLY RATE</small>
+              <h3 class="fw-bold text-dark mb-0">{{formatCurrency(estimateResult.estimatedHourlyRate)}}/hr</h3>
+              <small class="text-muted">Total Hours: ~{{estimateResult.estimatedHours}} hrs</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-white rounded-3 border mb-3">
+          <strong class="d-block small text-dark mb-1">Recommended Service Tier:</strong>
+          <span class="badge bg-primary text-uppercase px-3 py-2 fs-6">{{estimateResult.recommendedPackage}} Package</span>
+          <p class="text-muted small mt-2 mb-0">For a {{estimator.complexity}} {{estimator.category}} project across {{estimator.durationDays}} days, the {{estimateResult.recommendedPackage}} package offers optimal coverage.</p>
+        </div>
+      </div>
+
+      <!-- Matched Freelancers for this Estimate -->
+      <div class="fh-card p-4" ng-if="matchedFreelancers.length > 0">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Recommended Matching Freelancers ({{matchedFreelancers.length}})</h5>
+        <div class="row g-3">
+          <div class="col-md-6" ng-repeat="f in matchedFreelancers | limitTo: 4">
+            <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <img ng-src="{{f.user.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="">
+                <div>
+                  <strong class="d-block text-dark small">{{f.user.name}}</strong>
+                  <small class="text-primary fw-semibold">{{formatCurrency(f.hourlyRate)}}/hr</small>
+                </div>
+              </div>
+              <a href="#!/freelancers/{{f.user._id}}" class="btn btn-sm btn-outline-fh py-0">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

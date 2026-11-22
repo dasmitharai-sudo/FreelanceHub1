@@ -1,0 +1,143 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="d-flex align-items-center gap-2 mb-4">
+        <a href="#!/services" class="btn btn-sm btn-light border"><i class="bi bi-arrow-left"></i></a>
+        <div>
+          <h2 class="fw-bold mb-0">Create New Service Listing</h2>
+          <p class="text-muted small mb-0">Publish a 3-package service gig for direct client checkout.</p>
+        </div>
+      </div>
+
+      <div class="fh-card p-4 p-sm-5">
+        <form ng-submit="createServiceListing()">
+          <!-- Overview -->
+          <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Service Overview</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label small fw-semibold text-muted">Service Title *</label>
+              <input type="text" class="form-control" ng-model="newService.title" placeholder="I will build a high-performance web application..." required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold text-muted">Category *</label>
+              <select class="form-select" ng-model="newService.category" required>
+                <option value="">Select Category</option>
+                <option ng-repeat="cat in categories" value="{{cat.name}}">{{cat.name}}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold text-muted">Base Delivery Time (Days) *</label>
+              <input type="number" class="form-control" ng-model="newService.deliveryDays" min="1" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold text-muted">Service Description *</label>
+              <textarea class="form-control" rows="4" ng-model="newService.description" placeholder="Describe the service in detail, what is included, your methodology, and benefits..." required></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold text-muted">Required Information From Client *</label>
+              <textarea class="form-control" rows="2" ng-model="newService.requiredInfo" placeholder="e.g. Please provide wireframes, branding assets, content, and guidelines..."></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold text-muted">Service Portfolio Images (Upload up to 5)</label>
+              <input type="file" id="serviceImages" class="form-control" multiple accept="image/*">
+            </div>
+          </div>
+
+          <!-- 3-Tier Packages -->
+          <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Pricing Packages (Basic, Standard & Premium)</h5>
+          <p class="text-muted small mb-4">Provide 3 distinct packages allowing clients to pick their preferred tier.</p>
+
+          <div class="row g-4 mb-4">
+            <!-- Basic Package -->
+            <div class="col-md-4">
+              <div class="p-3 bg-light rounded-3 border h-100">
+                <span class="badge bg-secondary mb-2">BASIC PACKAGE</span>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Tier Name</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="newService.packages.basic.name" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Price (₹)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.basic.price" min="100" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Delivery (Days)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.basic.deliveryDays" min="1" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Revisions</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.basic.revisions" min="0" required>
+                </div>
+                <div>
+                  <label class="form-label small fw-semibold">Scope Description</label>
+                  <textarea class="form-control form-control-sm" rows="3" ng-model="newService.packages.basic.description" required></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Standard Package -->
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 border h-100" style="background-color: #f5f3ff; border-color: var(--fh-primary-light);">
+                <span class="badge bg-primary mb-2">STANDARD (RECOMMENDED)</span>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Tier Name</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="newService.packages.standard.name" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Price (₹)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.standard.price" min="100" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Delivery (Days)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.standard.deliveryDays" min="1" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Revisions</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.standard.revisions" min="0" required>
+                </div>
+                <div>
+                  <label class="form-label small fw-semibold">Scope Description</label>
+                  <textarea class="form-control form-control-sm" rows="3" ng-model="newService.packages.standard.description" required></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium Package -->
+            <div class="col-md-4">
+              <div class="p-3 bg-light rounded-3 border h-100">
+                <span class="badge bg-dark mb-2">PREMIUM VIP</span>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Tier Name</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="newService.packages.premium.name" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Price (₹)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.premium.price" min="100" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Delivery (Days)</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.premium.deliveryDays" min="1" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold">Revisions</label>
+                  <input type="number" class="form-control form-control-sm" ng-model="newService.packages.premium.revisions" min="0" required>
+                </div>
+                <div>
+                  <label class="form-label small fw-semibold">Scope Description</label>
+                  <textarea class="form-control form-control-sm" rows="3" ng-model="newService.packages.premium.description" required></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary-fh px-4 py-2" ng-disabled="isSubmitting">
+              <span ng-if="!isSubmitting"><i class="bi bi-cloud-upload me-1"></i> Publish Service Listing</span>
+              <span ng-if="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span>Publishing...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

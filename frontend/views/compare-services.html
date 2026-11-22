@@ -1,0 +1,84 @@
+<div class="container py-4">
+  <div class="text-center mb-4" style="max-width: 680px; margin: 0 auto;">
+    <div class="badge bg-indigo-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-semibold mb-2">
+      <i class="bi bi-arrow-left-right text-primary me-1"></i> Unique Feature
+    </div>
+    <h2 class="fw-bold mb-2">Side-by-Side Service Comparison</h2>
+    <p class="text-muted small">Compare features, pricing tiers, delivery times, and freelancer credentials before purchasing.</p>
+
+    <!-- Package Tier Switcher -->
+    <div class="btn-group mt-3" role="group">
+      <button type="button" class="btn btn-sm" ng-class="{'btn-primary': selectedTier === 'basic', 'btn-light border': selectedTier !== 'basic'}" ng-click="selectedTier = 'basic'">Basic Tier</button>
+      <button type="button" class="btn btn-sm" ng-class="{'btn-primary': selectedTier === 'standard', 'btn-light border': selectedTier !== 'standard'}" ng-click="selectedTier = 'standard'">Standard Tier</button>
+      <button type="button" class="btn btn-sm" ng-class="{'btn-primary': selectedTier === 'premium', 'btn-light border': selectedTier !== 'premium'}" ng-click="selectedTier = 'premium'">Premium Tier</button>
+    </div>
+  </div>
+
+  <div class="text-center py-5" ng-if="isLoading">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="fh-card p-4" ng-if="!isLoading && comparedServices.length > 0">
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 20%;" class="text-start">Feature</th>
+            <th ng-repeat="s in comparedServices" style="width: 26%;">
+              <div class="position-relative">
+                <button type="button" class="btn-close position-absolute top-0 end-0" ng-click="removeServiceFromCompare($index)" title="Remove from comparison"></button>
+                <img ng-src="{{s.images[0] || '/assets/images/service-default.jpg'}}" class="rounded mb-2" style="height: 100px; width: 100%; object-fit: cover;">
+                <h6 class="fw-bold text-dark text-truncate mb-1">{{s.title}}</h6>
+                <small class="text-muted d-block">by {{s.freelancer.name}}</small>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Category</td>
+            <td ng-repeat="s in comparedServices"><span class="badge bg-light text-dark border">{{s.category}}</span></td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Freelancer Rating</td>
+            <td ng-repeat="s in comparedServices">
+              <span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> {{s.rating}}</span> ({{s.numReviews}} reviews)
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Selected Tier Price</td>
+            <td ng-repeat="s in comparedServices">
+              <h4 class="fw-bold text-primary mb-0">{{formatCurrency(s.packages[selectedTier].price)}}</h4>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Delivery Speed</td>
+            <td ng-repeat="s in comparedServices">
+              <strong>{{s.packages[selectedTier].deliveryDays}} Days</strong>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Included Revisions</td>
+            <td ng-repeat="s in comparedServices">
+              <strong>{{s.packages[selectedTier].revisions}} Revisions</strong>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Tier Scope Description</td>
+            <td ng-repeat="s in comparedServices" class="small text-muted text-start">
+              {{s.packages[selectedTier].description}}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold text-muted">Action</td>
+            <td ng-repeat="s in comparedServices">
+              <a href="#!/services/{{s._id}}" class="btn btn-primary-fh btn-sm w-100">
+                View & Order
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

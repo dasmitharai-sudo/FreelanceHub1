@@ -1,0 +1,509 @@
+<div class="fh-dashboard-wrapper">
+  <!-- Freelancer Sidebar -->
+  <aside class="fh-sidebar d-none d-md-flex">
+    <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+      <img ng-src="{{currentUser.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="">
+      <div class="text-truncate">
+        <strong class="d-block text-dark text-truncate">{{currentUser.name}}</strong>
+        <span class="badge bg-success-subtle text-success border border-success-subtle">Freelancer Pro</span>
+      </div>
+    </div>
+
+    <nav class="d-flex flex-column gap-1">
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'overview'}" ng-click="setTab('overview')">
+        <i class="bi bi-grid-1x2"></i> Overview
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'services'}" ng-click="setTab('services')">
+        <i class="bi bi-collection"></i> My Services <span class="badge bg-secondary ms-auto" ng-if="myServices.length">{{myServices.length}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'orders'}" ng-click="setTab('orders')">
+        <i class="bi bi-box-seam"></i> Active Orders <span class="badge bg-secondary ms-auto" ng-if="myOrders.length">{{myOrders.length}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'proposals'}" ng-click="setTab('proposals')">
+        <i class="bi bi-send"></i> My Proposals <span class="badge bg-secondary ms-auto" ng-if="myProposals.length">{{myProposals.length}}</span>
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'wallet'}" ng-click="setTab('wallet')">
+        <i class="bi bi-wallet2"></i> Wallet & Payouts
+      </a>
+      <a href="javascript:void(0)" class="fh-sidebar-item" ng-class="{'active': activeTab === 'profile'}" ng-click="setTab('profile')">
+        <i class="bi bi-person-gear"></i> Profile & Skills
+      </a>
+      <a href="#!/messages" class="fh-sidebar-item">
+        <i class="bi bi-chat-dots"></i> Messages
+      </a>
+      <a href="#!/create-service" class="btn btn-primary-fh btn-sm mt-3 text-center">
+        <i class="bi bi-plus-lg me-1"></i> Add New Service
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="fh-main-content">
+    <!-- Mobile Tabs Navigation (Visible on phones & small tablets) -->
+    <div class="d-md-none mb-4 pb-2 border-bottom">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <img ng-src="{{currentUser.avatar || '/assets/images/default-avatar.png'}}" class="fh-avatar-sm" alt="Avatar">
+        <div class="text-truncate">
+          <strong class="d-block text-navy text-truncate small">{{currentUser.name}}</strong>
+          <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 10px;">Freelancer Pro</span>
+        </div>
+        <a href="#!/profile-settings" class="btn btn-sm btn-outline-navy ms-auto py-1 px-2" title="Profile Settings">
+          <i class="bi bi-gear me-1"></i> Settings
+        </a>
+      </div>
+      <div class="d-flex gap-2 overflow-x-auto pb-2 flex-nowrap" style="scrollbar-width: thin;">
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'overview', 'btn-outline-navy': activeTab !== 'overview'}" ng-click="setTab('overview')">
+          <i class="bi bi-grid-1x2 me-1"></i> Overview
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'services', 'btn-outline-navy': activeTab !== 'services'}" ng-click="setTab('services')">
+          <i class="bi bi-collection me-1"></i> Services ({{myServices.length}})
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'orders', 'btn-outline-navy': activeTab !== 'orders'}" ng-click="setTab('orders')">
+          <i class="bi bi-box-seam me-1"></i> Orders ({{myOrders.length}})
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'proposals', 'btn-outline-navy': activeTab !== 'proposals'}" ng-click="setTab('proposals')">
+          <i class="bi bi-send me-1"></i> Proposals ({{myProposals.length}})
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'wallet', 'btn-outline-navy': activeTab !== 'wallet'}" ng-click="setTab('wallet')">
+          <i class="bi bi-wallet2 me-1"></i> Wallet
+        </button>
+        <button type="button" class="btn btn-sm text-nowrap" ng-class="{'btn-deep-navy': activeTab === 'profile', 'btn-outline-navy': activeTab !== 'profile'}" ng-click="setTab('profile')">
+          <i class="bi bi-person-gear me-1"></i> Skills &amp; Bio
+        </button>
+      </div>
+    </div>
+    <!-- Tab 1: Overview -->
+    <div ng-if="activeTab === 'overview'">
+      <!-- Welcome Header -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+          <h3 class="fw-bold mb-1">Hello, {{currentUser.name}}! 👋</h3>
+          <p class="text-muted small mb-0">{{profile.title || 'Professional Freelancer'}}</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="availability-pill" ng-class="{
+            'availability-available': profile.availability === 'Available',
+            'availability-busy': profile.availability === 'Busy',
+            'availability-unavailable': profile.availability === 'Unavailable'
+          }">
+            <i class="bi bi-circle-fill" style="font-size: 6px;"></i> {{profile.availability}}
+          </span>
+          <a href="#!/freelancers/{{currentUser._id}}" class="btn btn-sm btn-outline-fh">Public Profile</a>
+        </div>
+      </div>
+
+      <!-- Profile Completion Indicator Card (Unique Feature) -->
+      <div class="fh-card p-4 mb-4 border-primary-subtle" style="background: linear-gradient(90deg, #ffffff 0%, #f5f3ff 100%);">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div>
+            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-speedometer2 text-primary me-1"></i> Profile Completion Indicator</h6>
+            <small class="text-muted">Complete all profile sections (portfolio, skills, hourly rate) to rank higher in search results.</small>
+          </div>
+          <span class="badge bg-primary fs-6">{{profile.profileCompletion}}%</span>
+        </div>
+        <div class="progress" style="height: 10px;">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: {{profile.profileCompletion}}%;"></div>
+        </div>
+      </div>
+
+      <!-- Financial / Wallet Stats Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">AVAILABLE BALANCE</small>
+              <h4 class="fw-bold mb-0 text-success">{{formatCurrency(wallet.availableBalance)}}</h4>
+            </div>
+            <div class="stat-icon bg-success-subtle text-success">
+              <i class="bi bi-cash-stack"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">PENDING IN ESCROW</small>
+              <h4 class="fw-bold mb-0 text-warning">{{formatCurrency(wallet.pendingBalance)}}</h4>
+            </div>
+            <div class="stat-icon bg-warning-subtle text-warning">
+              <i class="bi bi-hourglass-split"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">TOTAL EARNINGS</small>
+              <h4 class="fw-bold mb-0 text-primary">{{formatCurrency(wallet.totalEarnings)}}</h4>
+            </div>
+            <div class="stat-icon bg-primary-subtle text-primary">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div>
+              <small class="text-muted fw-semibold d-block">WITHDRAWN AMOUNT</small>
+              <h4 class="fw-bold mb-0 text-dark">{{formatCurrency(wallet.withdrawnAmount)}}</h4>
+            </div>
+            <div class="stat-icon bg-light text-muted">
+              <i class="bi bi-bank"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Client Opportunities -->
+      <div class="fh-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0">New Project Opportunities</h5>
+          <a href="#!/projects" class="btn btn-link btn-sm text-decoration-none">Browse All Projects</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Project</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Deadline</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="p in availableProjects">
+                <td class="fw-semibold">{{p.title}}</td>
+                <td><span class="badge bg-light text-dark border">{{p.category}}</span></td>
+                <td class="fw-bold text-primary">{{formatCurrency(p.budget)}}</td>
+                <td>{{p.deadline | date:'mediumDate'}}</td>
+                <td>
+                  <a href="#!/projects/{{p._id}}" class="btn btn-sm btn-outline-primary">Apply</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Services (Gig Management) -->
+    <div ng-if="activeTab === 'services'">
+      <div class="fh-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <h5 class="fw-bold mb-0">My Service Listings ({{myServices.length}})</h5>
+          <a href="#!/create-service" class="btn btn-primary-fh btn-sm"><i class="bi bi-plus-lg me-1"></i> New Service</a>
+        </div>
+
+        <div class="table-responsive" ng-if="myServices.length > 0">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Service Title</th>
+                <th>Category</th>
+                <th>Basic Tier</th>
+                <th>Standard Tier</th>
+                <th>Premium Tier</th>
+                <th>Rating</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="s in myServices">
+                <td class="fw-bold"><a href="#!/services/{{s._id}}" class="text-dark">{{s.title}}</a></td>
+                <td><span class="badge bg-light text-dark border">{{s.category}}</span></td>
+                <td class="fw-semibold text-primary">{{formatCurrency(s.packages.basic.price)}}</td>
+                <td class="fw-semibold text-primary">{{formatCurrency(s.packages.standard.price)}}</td>
+                <td class="fw-semibold text-primary">{{formatCurrency(s.packages.premium.price)}}</td>
+                <td><span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> {{s.rating}}</span></td>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="#!/services/{{s._id}}" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye"></i></a>
+                    <button class="btn btn-sm btn-outline-danger py-0" ng-click="deleteService(s._id)"><i class="bi bi-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Active Orders -->
+    <div ng-if="activeTab === 'orders'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Active Service Orders ({{myOrders.length}})</h5>
+        <div class="table-responsive" ng-if="myOrders.length > 0">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Order #</th>
+                <th>Service</th>
+                <th>Client</th>
+                <th>Amount</th>
+                <th>My Earnings (Net)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ord in myOrders">
+                <td class="fw-bold">#{{ord.orderNumber}}</td>
+                <td>{{ord.service.title}}</td>
+                <td>{{ord.client.name}}</td>
+                <td class="fw-bold">{{formatCurrency(ord.amount)}}</td>
+                <td class="fw-bold text-success">{{formatCurrency(ord.freelancerEarnings)}}</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': ord.status === 'Completed',
+                    'bg-warning text-dark': ord.status === 'In Progress' || ord.status === 'Submitted'
+                  }">{{ord.status}}</span>
+                </td>
+                <td>
+                  <a href="#!/orders/{{ord._id}}" class="btn btn-sm btn-primary-fh">Deliver / Manage</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Proposals -->
+    <div ng-if="activeTab === 'proposals'">
+      <div class="fh-card p-4">
+        <h5 class="fw-bold mb-3 border-bottom pb-2">My Submitted Proposals ({{myProposals.length}})</h5>
+        <div class="table-responsive" ng-if="myProposals.length > 0">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Project Title</th>
+                <th>Client</th>
+                <th>My Bid</th>
+                <th>Delivery Time</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="prop in myProposals">
+                <td class="fw-bold">{{prop.project.title}}</td>
+                <td>{{prop.project.client.name}}</td>
+                <td class="fw-bold text-primary">{{formatCurrency(prop.bidAmount)}}</td>
+                <td>{{prop.deliveryDays}} Days</td>
+                <td>
+                  <span class="badge" ng-class="{
+                    'bg-success': prop.status === 'accepted',
+                    'bg-secondary': prop.status === 'rejected',
+                    'bg-warning text-dark': prop.status === 'pending'
+                  }">{{prop.status}}</span>
+                </td>
+                <td>
+                  <a href="#!/workspace/{{prop.project._id}}" class="btn btn-sm btn-primary-fh" ng-if="prop.status === 'accepted'">Workspace</a>
+                  <a href="#!/projects/{{prop.project._id}}" class="btn btn-sm btn-outline-primary" ng-if="prop.status !== 'accepted'">View</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Wallet & Withdrawals -->
+    <div ng-if="activeTab === 'wallet'">
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="fh-card p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-wallet2 text-primary me-1"></i> Request Withdrawal</h5>
+            <div class="p-3 bg-light rounded-3 border mb-3">
+              <small class="text-muted d-block">Available for Payout:</small>
+              <h3 class="fw-bold text-success mb-0">{{formatCurrency(wallet.availableBalance)}}</h3>
+            </div>
+
+            <form ng-submit="requestWithdrawal()">
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Withdrawal Amount (₹) *</label>
+                <input type="number" class="form-control" ng-model="withdrawForm.amount" min="100" max="{{wallet.availableBalance}}" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Payout Method *</label>
+                <select class="form-select" ng-model="withdrawForm.method" required>
+                  <option value="UPI">UPI (Google Pay, PhonePe, Paytm)</option>
+                  <option value="Bank Transfer">Bank Transfer (NEFT/IMPS)</option>
+                </select>
+              </div>
+
+              <!-- UPI Field -->
+              <div class="mb-3" ng-if="withdrawForm.method === 'UPI'">
+                <label class="form-label small fw-semibold text-muted">UPI ID *</label>
+                <input type="text" class="form-control" ng-model="withdrawForm.upiId" placeholder="username@upi" required>
+              </div>
+
+              <!-- Bank Fields -->
+              <div ng-if="withdrawForm.method === 'Bank Transfer'">
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold text-muted">Bank Name</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="withdrawForm.bankName">
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small fw-semibold text-muted">Account Number</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="withdrawForm.accountNumber">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold text-muted">IFSC Code</label>
+                  <input type="text" class="form-control form-control-sm" ng-model="withdrawForm.ifscCode">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary-fh w-100 py-2">
+                Submit Withdrawal Request
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="fh-card p-4 mb-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Withdrawal History</h5>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="w in withdrawals">
+                    <td>{{w.requestedAt | date:'shortDate'}}</td>
+                    <td>{{w.method}}</td>
+                    <td class="fw-bold">{{formatCurrency(w.amount)}}</td>
+                    <td>
+                      <span class="badge" ng-class="{
+                        'bg-success': w.status === 'approved',
+                        'bg-danger': w.status === 'rejected',
+                        'bg-warning text-dark': w.status === 'pending'
+                      }">{{w.status}}</span>
+                    </td>
+                    <td class="small text-muted">{{w.adminRemarks || 'Under review'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="fh-card p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Recent Wallet Transactions</h5>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="tx in transactions">
+                    <td><span class="badge bg-light text-dark border">{{tx.type}}</span></td>
+                    <td class="small">{{tx.description}}</td>
+                    <td class="fw-bold text-success">{{formatCurrency(tx.amount)}}</td>
+                    <td class="small text-muted">{{tx.createdAt | date:'shortDate'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 6: Profile & Skills -->
+    <div ng-if="activeTab === 'profile'">
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <div class="fh-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+              <h5 class="fw-bold text-navy mb-0">Professional Profile Settings</h5>
+              <a href="#!/profile-settings" class="btn btn-sm btn-outline-navy">
+                <i class="bi bi-gear-wide-connected me-1"></i> Account &amp; Password Settings
+              </a>
+            </div>
+            <form ng-submit="updateProfile()">
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Professional Title *</label>
+                <input type="text" class="form-control" ng-model="profileForm.title" required>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold text-muted">Hourly Rate (₹/hr) *</label>
+                  <input type="number" class="form-control" ng-model="profileForm.hourlyRate" min="100" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold text-muted">Years of Experience</label>
+                  <input type="number" class="form-control" ng-model="profileForm.experience" min="0">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold text-muted">Availability Status *</label>
+                  <select class="form-select" ng-model="profileForm.availability" required>
+                    <option value="Available">Available (Accepting Orders)</option>
+                    <option value="Busy">Busy (Limited Slots)</option>
+                    <option value="Unavailable">Unavailable</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold text-muted">Skills (Comma separated) *</label>
+                  <input type="text" class="form-control" ng-model="profileForm.skillsStr" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Bio / Summary *</label>
+                <textarea class="form-control" rows="4" ng-model="profileForm.bio" placeholder="Describe your background and expertise in detail..."></textarea>
+              </div>
+
+              <!-- Multi-Category Selector -->
+              <label class="form-label small fw-semibold text-dark d-block mb-2">Selected Categories:</label>
+              <div class="d-flex flex-wrap gap-2 mb-4" style="max-height: 180px; overflow-y: auto;">
+                <button type="button" class="btn btn-sm" ng-repeat="cat in categories" ng-class="{'btn-primary': profileForm.categories.indexOf(cat.name) > -1, 'btn-outline-secondary': profileForm.categories.indexOf(cat.name) === -1}" ng-click="toggleCategory(cat.name)">
+                  {{cat.name}}
+                </button>
+              </div>
+
+              <button type="submit" class="btn btn-primary-fh px-4">Save Profile Changes</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Add Portfolio Item -->
+        <div class="col-lg-5">
+          <div class="fh-card p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Add Portfolio Work</h5>
+            <form ng-submit="addPortfolioItem()">
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Item Title *</label>
+                <input type="text" class="form-control form-control-sm" ng-model="newPortfolio.title" placeholder="Project name..." required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Short Description</label>
+                <textarea class="form-control form-control-sm" rows="3" ng-model="newPortfolio.description" placeholder="Project overview..."></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Project Link (Optional)</label>
+                <input type="url" class="form-control form-control-sm" ng-model="newPortfolio.link" placeholder="https://...">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold text-muted">Upload Project Screenshot</label>
+                <input type="file" id="portfolioImg" class="form-control form-control-sm" accept="image/*">
+              </div>
+              <button type="submit" class="btn btn-outline-primary btn-sm w-100">Add to Portfolio</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
